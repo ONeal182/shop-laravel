@@ -1,57 +1,19 @@
-<!doctype html>
-<html lang="en">
+@extends('master');
+@section('title', 'Категории');
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@section('content')
 
-    <title>Интернет Магазин</title>
-
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/starter-template.css" rel="stylesheet">
-</head>
-
-<body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="">Интернет Магазин</a>
+    <div class="starter-template">
+        @foreach ($categories as $categorie)
+            <div class="panel">
+                <a href="/{{ $categorie->code }}">
+                    <img src="/storage/categories/mobile.jpg">
+                    <h2>{{ $categorie->name }}</h2>
+                </a>
+                <p>
+                    {{ $categorie->description }}
+                </p>
             </div>
-            <div id="navbar" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="">Все товары</a></li>
-                    <li class="active"><a href="/categories">Категории</a>
-                    </li>
-                    <li><a href="/basket">В корзину</a></li>
-                    <li><a href="/reset">Сбросить проект в начальное состояние</a></li>
-                </ul>
-
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/admin/home">Панель администратора</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-
-    <div class="container">
-        <div class="starter-template">
-            @foreach ($categories as $categorie)
-                <div class="panel">
-                    <a href="/{{ $categorie->code }}">
-                        <img src="/storage/categories/mobile.jpg">
-                        <h2>{{ $categorie->name }}</h2>
-                    </a>
-                    <p>
-                        {{ $categorie->description }}
-                    </p>
-                </div>
-            @endforeach
-        </div>
+        @endforeach
     </div>
-</body>
-
-</html>
+@endsection
