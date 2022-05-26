@@ -1,13 +1,15 @@
 @extends('master');
 @section('title', 'Главная');
-@section('content')
-    ;
+@section('content');
     <div class="starter-template">
         <h1>Все товары</h1>
 
         <div class="row">
-            @include('card', ['product'=> '']);
-            
+            @foreach ($prudcts as $product)
+                @include('card', ['product' => $product])
+            @endforeach
+
+
         </div>
     </div>
 @endsection
