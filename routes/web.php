@@ -19,7 +19,7 @@ Route::get('/basket', [MainController::class, 'basket'])->name('basket');
 Route::get('/basket/place', [MainController::class, 'basketPlace'])->name('basket-place');
 Route::get('/{category}', [MainController::class, 'category'])->name('category');
 Route::get('/{category}/{product?}',  [MainController::class, 'product'])->name('product');
-Route::get('/mobiles/{product?}', [MainController::class, 'product'])->name('product');
+
 
 // Route::get('/categories', function () {
 //     return view('categories');
