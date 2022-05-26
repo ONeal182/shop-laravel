@@ -14,13 +14,20 @@ class MainController extends Controller
         $categories = Category::get();
         return view('categories',['categories'=>$categories]);
     }
-    public function product($product = null){
-        return view('product',['product'=>$product]);
+    public function product($category, $product = null) {
+        return view('product', ['product' => $product]);
     }
     public function category($code = null){
         $categoryObj = Category::where('code', $code)->first();
         return view('category',['category'=>$categoryObj]);
         
+    }
+    public function basket() {
+        return view('basket');
+    }
+    
+    public function basketPlace() {
+        return view('order');
     }
     
 }
