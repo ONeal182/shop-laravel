@@ -3,31 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
-    public function index(){
-        return view('index');
+    public function index()
+    {
+        $products = Product::get();
+        return view('index', ['prudcts' => $products]);
     }
-    public function categories(){
+    public function categories()
+    {
         $categories = Category::get();
-        return view('categories',['categories'=>$categories]);
+        return view('categories', ['categories' => $categories]);
     }
-    public function product($category, $product = null) {
+    public function product($category, $product = null)
+    {
+        $product = Product::where('code', $product)->get()->first();
         return view('product', ['product' => $product]);
     }
-    public function category($code = null){
+    public function category($code = null)
+    {
         $categoryObj = Category::where('code', $code)->first();
-        return view('category',['category'=>$categoryObj]);
-        
+        return view('category', ['category' => $categoryObj]);
     }
-    public function basket() {
+    public function basket()
+    {
         return view('basket');
     }
-    
-    public function basketPlace() {
+
+    public function basketPlace()
+    {
         return view('order');
     }
-    
 }
