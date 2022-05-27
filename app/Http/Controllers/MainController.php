@@ -28,13 +28,5 @@ class MainController extends Controller
         $categoryObj = Category::where('code', $code)->first();
         return view('category', ['category' => $categoryObj]);
     }
-    public function basket()
-    {
-        return view('basket');
-    }
 
-    public function basketPlace()
-    {
-        return view('order');
-    }
 }
