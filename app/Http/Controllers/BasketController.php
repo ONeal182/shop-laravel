@@ -82,9 +82,13 @@ class BasketController extends Controller
             return redirect()->order('index');
         }
         $order = Order::find($orderId);
-        $reusult =  $order->saveOrder($request->name, $request->phone);
+        $success =  $order->saveOrder($request->name, $request->phone);
 
-
+        if($success){
+            session()->flash('success','Ваш заказ принят в обработку');
+        }else{
+            session()->flash('warning','Упас, что то пошло не так!');
+        }
         return redirect()->route('index');
     }
 }
