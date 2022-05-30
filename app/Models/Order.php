@@ -8,20 +8,35 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    protected $fillable = [ 
+    protected $fillable = [
         'id',
     ];
-    public function products(){
-        
+    public function products()
+    {
+
         return $this->belongsToMany(Product::class)->withPivot('count')->withTimestamps();
     }
 
-    public function getFullPrice(){
+    public function getFullPrice()
+    {
         $sum = 0;
-        foreach($this->products as $product){
+        foreach ($this->products as $product) {
             $sum += $product->getPriceForCount();
         }
         return $sum;
+    }
 
+    public function saveOrder($name, $phone)
+    {
+        if ($this->satus == 0) {
+            $this->name = $name;
+            $this->phone = $phone;
+            $this->status = 1;
+            $this->save();
+            session()->forget('orderId');
+            return true;
+        } else {
+            return false;
+        }
     }
 }

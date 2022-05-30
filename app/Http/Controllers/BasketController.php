@@ -74,4 +74,17 @@ class BasketController extends Controller
 
         return redirect()->route('basket');
     }
+    public function basketConfirm(Request $request)
+    {
+
+        $orderId = session('orderId');
+        if (is_null($orderId)) {
+            return redirect()->order('index');
+        }
+        $order = Order::find($orderId);
+        $reusult =  $order->saveOrder($request->name, $request->phone);
+
+
+        return redirect()->route('index');
+    }
 }
