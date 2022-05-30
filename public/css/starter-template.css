@@ -1,3 +1,7 @@
 div.form-inline form{
     display: inline;
 }
+
+div.starter-template{
+    margin-top: 100px;
+}
