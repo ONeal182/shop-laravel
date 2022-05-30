@@ -26,11 +26,14 @@
                                     {{ $product->name }}
                                 </a>
                             </td>
-                            <td><span class="badge">1</span>
+                            <td><span class="badge">{{$product->pivot->count}}</span>
                                 <div class="btn-group">
-                                    <a type="button" class="btn btn-danger"
-                                        href="http://laravel-diplom-1.rdavydov.ru/basket/1/remove"><span
-                                            class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
+                                    <form action="{{ route('basket-remove', $product) }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger"
+                                        ><span class="glyphicon glyphicon-minus"
+                                            aria-hidden="true"></span></button>
+                                    </form>
                                     <form action="{{ route('basket-add', $product) }}" method="post">
                                         @csrf
                                         <button type="submit" class="btn btn-success"
@@ -41,7 +44,7 @@
                                 </div>
                             </td>
                             <td>{{ $product->price }} руб.</td>
-                            <td>{{ $product->price }} руб.</td>
+                            <td>{{ $product->getPriceForCount($product->pivot->count) }} руб.</td>
                         </tr>
                     @endforeach
 
