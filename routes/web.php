@@ -3,6 +3,7 @@
 use App\Http\Controllers\BasketController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +15,12 @@ use App\Http\Controllers\MainController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes([
+    'reset'=>false,
+    'confirm'=>false,
+    'verify'=>false
 
+]);
 Route::get('/', [MainController::class, 'index'])->name('index');
 Route::get('/categories', [MainController::class, 'categories'])->name('categories');
 Route::get('/basket', [BasketController::class, 'basket'])->name('basket');
