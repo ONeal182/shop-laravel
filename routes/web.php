@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BasketController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,7 @@ Auth::routes([
 
 ]);
 Route::get('/logout', 'Auth\LoginController@logout')->name('get-logout');
+Route::get('/home', [HomeController::class, 'index']);
 Route::get('/', [MainController::class, 'index'])->name('index');
 Route::get('/categories', [MainController::class, 'categories'])->name('categories');
 Route::get('/basket', [BasketController::class, 'basket'])->name('basket');
