@@ -6,7 +6,7 @@
 
         <div class="row">
             @foreach ($prudcts as $product)
-                @include('card', ['product' => $product])
+                @include('layouts.card', ['product' => $product])
             @endforeach
 
 
