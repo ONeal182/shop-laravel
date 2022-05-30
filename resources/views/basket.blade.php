@@ -1,4 +1,4 @@
-@extends('master')
+@extends('layouts.master')
 
 @section('title', 'Корзина')
 
@@ -27,7 +27,7 @@
                                 </a>
                             </td>
                             <td><span class="badge">{{$product->pivot->count}}</span>
-                                <div class="btn-group">
+                                <div class="btn-group form-inline">
                                     <form action="{{ route('basket-remove', $product) }}" method="post">
                                         @csrf
                                         <button type="submit" class="btn btn-danger"
@@ -44,19 +44,19 @@
                                 </div>
                             </td>
                             <td>{{ $product->price }} руб.</td>
-                            <td>{{ $product->getPriceForCount($product->pivot->count) }} руб.</td>
+                            <td>{{ $product->getPriceForCount() }} руб.</td>
                         </tr>
                     @endforeach
 
                     <tr>
                         <td colspan="3">Общая стоимость:</td>
-                        <td>71990 руб.</td>
+                        <td>{{ $order->getFullPrice() }} руб.</td>
                     </tr>
                 </tbody>
             </table>
             <br>
             <div class="btn-group pull-right" role="group">
-                <a type="button" class="btn btn-success" href="http://laravel-diplom-1.rdavydov.ru/basket/place">Оформить
+                <a type="button" class="btn btn-success" href="{{ route('basket-place')}}">Оформить
                     заказ</a>
             </div>
         </div>
