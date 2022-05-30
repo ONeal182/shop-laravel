@@ -34,3 +34,6 @@ Route::get('/{category}/{product?}',  [MainController::class, 'product'])->name(
 // Route::get('/mobiles/iphone_x_64', function () {
 //     return view('product');
 // });
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
