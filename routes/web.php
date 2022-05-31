@@ -1,12 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\BasketController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Auth;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Auth::routes([
     'reset' => false,
     'confirm' => false,
@@ -28,10 +26,13 @@ Route::get('/logout', 'Auth\LoginController@logout')->name('get-logout');
 Route::group([
     'middleware' => 'auth',
     'namespace' => 'Admin',
+    'prefix'=> 'admin'
 ], function () {
     Route::group(['middleware' => 'is_admin'], function () {
         Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     });
+    Route::resource('categories', 'CategoryController');
+    
 });
 
 Route::get('/', [MainController::class, 'index'])->name('index');
