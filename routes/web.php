@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,7 @@ Route::group([
         Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     });
     Route::resource('categories', 'CategoryController');
+    Route::resource('products', 'ProductController');
     
 });
 
