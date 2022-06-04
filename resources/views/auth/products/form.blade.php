@@ -13,6 +13,9 @@
     @else
         <h1>Добавить товар</h1>
     @endisset
+    @error('*')
+        <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
     <form method="POST" enctype="multipart/form-data"
         @isset($product) action="{{ route('products.update', $product) }}"
               @else

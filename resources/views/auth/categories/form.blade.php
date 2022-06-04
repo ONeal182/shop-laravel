@@ -13,7 +13,9 @@
                 @else
                     <h1>Добавить Категорию</h1>
                 @endisset
-
+                @error('*')
+                    <div class="alert alert-danger">{{$message}}</div>
+                @enderror
                 <form method="POST" enctype="multipart/form-data"
                       @isset($category)
                       action="{{ route('categories.update', $category) }}"
