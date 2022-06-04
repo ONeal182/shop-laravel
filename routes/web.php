@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\BasketController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\OrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Auth;
@@ -17,25 +15,38 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes([
     'reset' => false,
     'confirm' => false,
     'verify' => false
 
 ]);
-Route::get('/logout', 'Auth\LoginController@logout')->name('get-logout');
-Route::group([
-    'middleware' => 'auth',
-    'namespace' => 'Admin',
-    'prefix'=> 'admin'
-], function () {
-    Route::group(['middleware' => 'is_admin'], function () {
-        Route::get('/orders', [OrderController::class, 'index'])->name('orders');
+Route::middleware(['auth'])->group(function () {
+    Route::group([
+        'prefix'=>'person',
+        'namespace'=>'Person',
+        'as' => 'person.'
+    ], function () {
+        
+        Route::get('/orders', 'OrderController@index')->name('orders');
+        Route::get('/orders/{order}', 'OrderController@show')->name('orders-show');
     });
-    Route::resource('categories', 'CategoryController');
-    Route::resource('products', 'ProductController');
-    
+    Route::group([
+        'middleware' => 'auth',
+        'namespace' => 'Admin',
+        'prefix' => 'admin'
+    ], function () {
+        Route::group(['middleware' => 'is_admin'], function () {
+            Route::get('/orders', 'OrderController@index')->name('orders');
+            Route::get('/orders/{order}', 'OrderController@show')->name('orders-show');
+        });
+        Route::resource('categories', 'CategoryController');
+        Route::resource('products', 'ProductController');
+    });
 });
+Route::get('/logout', 'Auth\LoginController@logout')->name('get-logout');
+
 
 Route::get('/', [MainController::class, 'index'])->name('index');
 Route::get('/categories', [MainController::class, 'categories'])->name('categories');
@@ -50,7 +61,7 @@ Route::group([
 ], function () {
     Route::get('/', [BasketController::class, 'basket'])->name('basket');
     Route::get('/place', [BasketController::class, 'basketPlace'])->name('basket-place');
-    
+
     Route::post('/confirm/', [BasketController::class, 'basketConfirm'])->name('basket-confirm');
     Route::post('/remove/{product}', [BasketController::class, 'basketRemove'])->name('basket-remove');
 });
