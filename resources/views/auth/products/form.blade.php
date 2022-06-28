@@ -13,9 +13,7 @@
     @else
         <h1>Добавить товар</h1>
     @endisset
-    @error('*')
-        <div class="alert alert-danger">{{ $message }}</div>
-    @enderror
+    @include('auth.layouts.error', ['fieldname' => '*'])
     <form method="POST" enctype="multipart/form-data"
         @isset($product) action="{{ route('products.update', $product) }}"
               @else
@@ -84,6 +82,24 @@
                     value="@isset($product) {{ $product->price }} @endisset">
             </div>
         </div>
+        <br>
+        @foreach ([
+            'hit'=> 'Хит',
+            'new' =>'Новинка',
+            'recomend' => 'Рекомендуемые'
+        ] as $field => $title)
+        <div class="input-group row">
+            <label for="code" class="col-sm-2 col-form-label">{{$title}} </label>
+            <div class="col-sm-1">
+                <input type="checkbox" class="form-control" name="{{$field}}" id="{{$field}}"
+                @if ( isset($product) && $product->$field === 1 )
+                
+                checked
+                        @endif  
+                    >
+            </div>
+        </div>
+        @endforeach
         <button class="btn btn-success">Сохранить</button>
     </div>
 </form>
