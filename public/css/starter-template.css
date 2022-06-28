@@ -67,3 +67,7 @@ footer {
     color: #99979c;
     background-color: #2a2730;
 }
+
+div.filters {
+padding-bottom: 5px;
+}
