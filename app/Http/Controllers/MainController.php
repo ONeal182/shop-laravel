@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductsFilterRequest;
-use App\Models\Category;
+
 use App\Models\Product;
+use App\Models\Category;
+
 use Illuminate\Http\Request;
+use App\Http\Requests\ProductsFilterRequest;
 
 class MainController extends Controller
 {
     public function index(ProductsFilterRequest $request)
     {
+
+        \Debugbar::info($request);
+
         $productsQuery = Product::query()->orderBy('price', 'asc');
         if($request->filled('price_from')){
             $productsQuery->where('price', '>=', $request->price_from);
