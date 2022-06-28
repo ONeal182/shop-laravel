@@ -46,4 +46,5 @@
 
         </div>
     </div>
+    {{ $prudcts->links('pagination::bootstrap-4') }}
 @endsection
