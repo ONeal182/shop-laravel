@@ -44,11 +44,16 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $params = $request->all();
+        
         unset($params['image']);
+
         if ($request->has('image')) {
             $path = $request->file('image')->store('products');
             $params['image'] = $path;
         }
+
+        
+        // dd( $params);
         Product::create($params);
         return redirect()->route('products.index');
     }
@@ -91,6 +96,12 @@ class ProductController extends Controller
             Storage::delete($product->image);
             $path = $request->file('image')->store('products');
             $params['image'] = $path;
+        }
+        foreach(['new','hit', 'recomend'] as $fieldName){
+            
+            if(!isset($params[$fieldName])){
+                $params[$fieldName] = 0;
+            }
         }
         $product->update($params);
         return redirect()->route('products.index');
