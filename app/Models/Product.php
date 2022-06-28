@@ -15,6 +15,23 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function scopeHit($query)
+    {
+        return $query->where('hit', 1);
+    }
+    public function scopeNew($query)
+    {
+        return $query->where('new', 1);
+    }
+    public function scopeRecomend($query)
+    {
+        return $query->where('recomend', 1);
+    }
+
+    public function scopeOrderByPrice($query){
+        return $query->orderBy('price', 'asc');
+    }
+
     public function getPriceForCount()
     {
         if (!is_null($this->pivot)) {
@@ -22,17 +39,18 @@ class Product extends Model
         }
         return $this->price;
     }
-    
-    public function setHitAttribute($value){
+
+    public function setHitAttribute($value)
+    {
         $this->attributes['hit'] = $value === 'on' ? 1 : 0;
     }
-    public function setNewAttribute($value){
+    public function setNewAttribute($value)
+    {
         $this->attributes['new'] = $value === 'on' ? 1 : 0;
-
     }
-    public function setRecomendAttribute($value){
+    public function setRecomendAttribute($value)
+    {
         $this->attributes['recomend'] = $value === 'on' ? 1 : 0;
-
     }
 
     public function isHit()
@@ -43,11 +61,9 @@ class Product extends Model
     public function isNew()
     {
         return $this->new === 1;
-
     }
     public function isRecomend()
     {
         return $this->recomend === 1;
-
     }
 }

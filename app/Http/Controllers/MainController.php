@@ -16,7 +16,7 @@ class MainController extends Controller
 
         // \Debugbar::info($request);
 
-        $productsQuery = Product::with('category')->orderBy('price', 'asc');
+        $productsQuery = Product::with('category')->orderByPrice();
         if($request->filled('price_from')){
             $productsQuery->where('price', '>=', $request->price_from);
         }
@@ -26,7 +26,7 @@ class MainController extends Controller
         foreach(['hit','new','recomend'] as $field){
             // dd($field);
             if($request->has($field)){
-                $productsQuery->where($field, 1);
+                $productsQuery->$field();
     
             }
         }
