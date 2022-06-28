@@ -20,7 +20,7 @@ class Product extends Model
         }
         return $this->price;
     }
-
+    
     public function setHitAttribute($value){
         $this->attributes['hit'] = $value === 'on' ? 1 : 0;
     }
