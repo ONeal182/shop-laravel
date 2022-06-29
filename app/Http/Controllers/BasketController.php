@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\Basket;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -9,93 +10,50 @@ use Illuminate\Support\Facades\Auth;
 
 class BasketController extends Controller
 {
-    public function basket()
+    public function basket(Basket $basket)
     {
-        $orderId = session('orderId');
-        if (is_null($orderId)) {
-            $order = Order::findOrFail($orderId);
-            dd($order);
-        } else {
-            $order =  Order::find($orderId);
-        }
+        $order = $basket->getOrder();
 
         return view('basket', ['order' => $order]);
     }
 
-    public function basketPlace()
+    public function basketPlace(Basket $basket)
     {
-        $orderId = session('orderId');
-        if (is_null($orderId)) {
-            return redirect()->route(('index'));
-        } else {
-            $order =  Order::find($orderId);
-        }
+        $order = $basket->getOrder();
         return view('order', ['order' => $order]);
     }
 
-    public function basketAdd(Request $request, $productId)
+    public function basketAdd(Product $product)
     {
-        $orderId = session('orderId');
 
-        if (is_null($orderId)) {
-            $order = Order::create();
-            session(['orderId' => $order->id]);
-        } else {
+        $basket = new Basket(true);
+        $orderId = $basket->getOrder();
 
-            $order =  Order::find($orderId);
-        }
+
         
-        if ($order->products->contains($productId)) {
-            $pivotRow = $order->products()->where('product_id', $productId)->first()->pivot;
-            $pivotRow->count++;
-            $pivotRow->update();
+
+        $basket->addProduct($product);
+        session()->flash('success', 'Добавлен товар ' . $product->name);
+        return redirect()->route('basket');
+    }
+
+    public function basketRemove(Product $product, Basket $basket)
+    {
+        $orderId = $basket->getOrder($product->id);
+        $basket->removeProduct($product);
+
+        session()->flash('warning', 'Удалён товар ' . $product->name);
+        return redirect()->route('basket');
+    }
+    public function basketConfirm(Request $request, Basket $basket)
+    {
+
+        $success = $basket->saveOrder($request->name, $request->phone);
+
+        if ($success) {
+            session()->flash('success', 'Ваш заказ принят в обработку');
         } else {
-            $order->products()->attach($productId);
-        }
-        if(Auth::check()){
-            $order->user_id = Auth::id();
-            $order->save();
-        }
-        $product = Product::find($productId);
-        session()->flash('success', 'Добавлен товар '.$product->name);
-        return redirect()->route('basket');
-    }
-
-    public function basketRemove($productId)
-    {
-        $orderId = session('orderId');
-
-        if (is_null($orderId)) {
-            return redirect()->route('basket');
-        }
-        $order =  Order::find($orderId);
-        if ($order->products->contains($productId)) {
-            $pivotRow = $order->products()->where('product_id', $productId)->first()->pivot;
-            if ($pivotRow->count < 2) {
-                $order->products()->detach($productId);
-            } else {
-                $pivotRow->count--;
-                $pivotRow->update();
-            }
-        }
-        $product = Product::find($productId);
-        session()->flash('warning', 'Удалён товар '.$product->name);
-        return redirect()->route('basket');
-    }
-    public function basketConfirm(Request $request)
-    {
-
-        $orderId = session('orderId');
-        if (is_null($orderId)) {
-            return redirect()->order('index');
-        }
-        $order = Order::find($orderId);
-        $success =  $order->saveOrder($request->name, $request->phone);
-
-        if($success){
-            session()->flash('success','Ваш заказ принят в обработку');
-        }else{
-            session()->flash('warning','Упас, что то пошло не так!');
+            session()->flash('warning', 'Упас, что то пошло не так!');
         }
         return redirect()->route('index');
     }
