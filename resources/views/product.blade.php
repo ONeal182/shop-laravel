@@ -9,7 +9,15 @@
         <img src="/storage/products/iphone_x.jpg">
         <p>{{ $product->description }}</p>
         @if ($product->isAvilable())
-        <a class="btn btn-success" href="/basket/1/add">Добавить в корзину</a>
+        <form action="{{ route('basket-add', $product) }}" method="post">
+            @csrf
+            @if ($product->isAvilable())
+                <button type="submit" class="btn btn-primary" role="button">Добавить в корзину</button>
+            @else
+                <button type="submit" disabled class="btn btn-primary" role="button">Недоступен</button>
+            @endif
+
+        </form>
         @else
         Недоступен
         @endif
