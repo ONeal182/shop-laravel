@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+
+    use SoftDeletes;
+
     protected $table = 'products';
 
-    protected $fillable = ['name', 'code', 'price', 'category_id', 'description', 'image', 'hit', 'new', 'recomend'];
+    protected $fillable = ['name', 'code', 'price', 'category_id', 'description', 'image', 'hit', 'new', 'recomend', 'count'];
 
     public function category()
     {
@@ -51,6 +55,11 @@ class Product extends Model
     public function setRecomendAttribute($value)
     {
         $this->attributes['recomend'] = $value === 'on' ? 1 : 0;
+    }
+
+    public function isAvilable(){
+        $this->trashed();
+        return  !$this->trashed() && $this->count >= 1;
     }
 
     public function isHit()
