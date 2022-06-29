@@ -20,8 +20,13 @@ class Basket
 
             $this->order  =  Order::find($orderId);
         }
-        
+
         $this->order =  Order::find($orderId);
+    }
+
+    protected function getPivot($product)
+    {
+        return  $this->order->products()->where('product_id', $product)->first()->pivot;;
     }
 
     public function getOrder()
@@ -42,7 +47,7 @@ class Basket
         }
         $order =  Order::find($this->order->products);
         if ($this->order->products->contains($product->id)) {
-            $pivotRow = $this->order->products()->where('product_id', $product->id)->first()->pivot;
+            $pivotRow = $this->getPivot($product->id);
             if ($pivotRow->count < 2) {
                 $this->order->products()->detach($product->id);
             } else {
@@ -55,11 +60,19 @@ class Basket
 
     public function addProduct(Product $product)
     {
+        $product->count;
+        
         if ($this->order->products->contains($product->id)) {
-            $pivotRow = $this->order->products()->where('product_id', $product->id)->first()->pivot;
+            $pivotRow = $this->getPivot($product->id);
             $pivotRow->count++;
+            if($pivotRow->count >= $product->count){
+                return false;
+            }
             $pivotRow->update();
         } else {
+            if($product->count == 0){
+                return false;
+            }
             $this->order->products()->attach($this->order->id);
         }
         if (Auth::check()) {

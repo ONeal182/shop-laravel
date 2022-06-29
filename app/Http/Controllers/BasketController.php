@@ -20,20 +20,25 @@ class BasketController extends Controller
     public function basketPlace(Basket $basket)
     {
         $order = $basket->getOrder();
+        if($basket->countAvilable){
+            
+        }
         return view('order', ['order' => $order]);
     }
 
     public function basketAdd(Product $product)
     {
 
-        $basket = new Basket(true);
-        $orderId = $basket->getOrder();
+        $result = new Basket(true);
+        $orderId = $result->getOrder();
+        if($result){
+            session()->flash('success', 'Добавлен товар ' . $product->name);
+        }else{
+            session()->flash('error', 'Товар не доступен ' . $product->name);
 
-
+        }
+        $result->addProduct($product);
         
-
-        $basket->addProduct($product);
-        session()->flash('success', 'Добавлен товар ' . $product->name);
         return redirect()->route('basket');
     }
 
