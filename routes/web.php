@@ -65,7 +65,7 @@ Route::group([
     Route::post('/confirm/', [BasketController::class, 'basketConfirm'])->name('basket-confirm');
     Route::post('/remove/{product}', [BasketController::class, 'basketRemove'])->name('basket-remove');
 });
-
+Route::post('/subscription/{product}', [MainController::class, 'subscribe'])->name('subscription');
 Route::get('/{category}', [MainController::class, 'category'])->name('category');
 Route::get('/{category}/{product?}',  [MainController::class, 'product'])->name('product');
 

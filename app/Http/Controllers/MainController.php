@@ -8,6 +8,7 @@ use App\Models\Category;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductsFilterRequest;
+use App\Models\Subscription;
 
 class MainController extends Controller
 {
@@ -17,21 +18,20 @@ class MainController extends Controller
         // \Debugbar::info($request);
 
         $productsQuery = Product::with('category')->orderByPrice();
-        if($request->filled('price_from')){
+        if ($request->filled('price_from')) {
             $productsQuery->where('price', '>=', $request->price_from);
         }
-        if($request->filled('price_to')){
+        if ($request->filled('price_to')) {
             $productsQuery->where('price', '<=', $request->price_to);
         }
-        foreach(['hit','new','recomend'] as $field){
+        foreach (['hit', 'new', 'recomend'] as $field) {
             // dd($field);
-            if($request->has($field)){
+            if ($request->has($field)) {
                 $productsQuery->$field();
-    
             }
         }
-        
-        $products = $productsQuery->paginate(6)->withPath("?".$request->getQueryString());
+
+        $products = $productsQuery->paginate(6)->withPath("?" . $request->getQueryString());
         return view('index', ['prudcts' => $products]);
     }
     public function categories()
@@ -41,7 +41,7 @@ class MainController extends Controller
     }
     public function product($category, $product = null)
     {
-        $product = Product::withTrashed()->where('code', $product)->get()->firstOrFail();
+        $product = Product::withTrashed()->where('code', $product)->get()->first();
         return view('product', ['product' => $product]);
     }
     public function category($code = null)
@@ -50,4 +50,14 @@ class MainController extends Controller
         return view('category', ['category' => $categoryObj]);
     }
 
+    public function subscribe(Request $request, Product $product)
+    {
+        Subscription::create(
+            [
+                'email' => $request->email,
+                'product_id' => $product->id
+            ]
+        );
+        return redirect()->back()->with('success', 'Спасибо мы с вами свяжемся');
+    }
 }

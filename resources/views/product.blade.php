@@ -19,7 +19,18 @@
 
         </form>
         @else
-        Недоступен
+        
+        <span>Товар не доступен</span>
+        @if ($errors->get('email'))
+            {{!! $errors->get('email')[0] !!}}
+        @endif
+        <br>
+        <form action="{{ route('subscription', $product) }}" method="post">
+            @csrf
+            <input type="email" name="email" id="email">
+            <button type="submit">Отправить</button>
+
+        </form>
         @endif
         
     </div>
