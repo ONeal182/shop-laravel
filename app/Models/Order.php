@@ -14,7 +14,7 @@ class Order extends Model
     ];
     public function products()
     {
-
+        
         return $this->belongsToMany(Product::class)->withPivot('count')->withTimestamps();
     }
     public function scopeActive($query){
@@ -23,8 +23,8 @@ class Order extends Model
     public function calculateFullSum()
     {
         $sum = 0;
-        foreach ($this->skus()->withTrashed()->get() as $sku) {
-            $sum += $sku->getPriceForCount();
+        foreach ($this->products()->withTrashed()->get() as $product) {
+            $sum += $product->getPriceForCount();
         }
         return $sum;
     }

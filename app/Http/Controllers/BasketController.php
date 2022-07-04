@@ -19,8 +19,9 @@ class BasketController extends Controller
 
     public function basketPlace(Basket $basket)
     {
+        
         $order = $basket->getOrder();
-        if(!$basket->countAvilable){
+        if(!$basket->countAvilable()){
             session()->flash('warning', 'Товар не доступен');
             return redirect()->route('basket');
         }
@@ -32,6 +33,7 @@ class BasketController extends Controller
 
         $result = new Basket(true);
         $orderId = $result->getOrder();
+
         $result->addProduct($product);
         if($result){
             session()->flash('success', 'Добавлен товар ' . $product->name);
@@ -54,8 +56,9 @@ class BasketController extends Controller
     }
     public function basketConfirm(Request $request, Basket $basket)
     {
+        $email = Auth::check() ? Auth::user()->email : $request->email;
 
-        $success = $basket->saveOrder($request->name, $request->phone);
+        $success = $basket->saveOrder($request->name, $request->phone, $email);
 
         if ($success) {
             session()->flash('success', 'Ваш заказ принят в обработку');

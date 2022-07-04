@@ -2,9 +2,11 @@
 
 namespace App\Classes;
 
+use App\Mail\OrderCreated;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class Basket
 {
@@ -33,22 +35,29 @@ class Basket
     {
         return $this->order;
     }
-    public function countAvilable(){
+    public function countAvilable($updateCount = false){
         foreach($this->order->products as $orderProduct){
-            if($this->getPivot($orderProduct)->count > $orderProduct->count){
+            if($this->getPivot($orderProduct->id)->count > $orderProduct->count){
                 return false;
+            }
+            if($updateCount){
+                $orderProduct->count -= $this->getPivot($orderProduct->id)->count;
             }
             
         }
+        if($updateCount){
+            $this->order->products->map->save();
+        }
         return true;
     }
-    public function saveOrder($name, $phone)
+    public function saveOrder($name, $phone, $email)
     {
-        if(!$this->countAvilable()){
+        if(!$this->countAvilable(true)){
             session()->flash('warning', 'Упас, что то пошло не так!');
 
             return false;
         }
+        Mail::to($email)->send(new OrderCreated($name, $this->getOrder()));
         return $this->order->saveOrder($name, $phone);
     }
 
@@ -73,7 +82,6 @@ class Basket
 
     public function addProduct(Product $product)
     {
-        
         if($this->order->products->contains($product->id)) {
             $pivotRow = $this->getPivot($product->id);
             $pivotRow->count++;

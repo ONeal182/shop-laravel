@@ -41,12 +41,12 @@ class MainController extends Controller
     }
     public function product($category, $product = null)
     {
-        $product = Product::withTrashed()->where('code', $product)->get()->first();
+        $product = Product::withTrashed()->where('code', $product)->get()->firstOrFail();
         return view('product', ['product' => $product]);
     }
     public function category($code = null)
     {
-        $categoryObj = Category::where('code', $code)->first();
+        $categoryObj = Category::where('code', $code)->firstOrFail();
         return view('category', ['category' => $categoryObj]);
     }
 
