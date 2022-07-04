@@ -20,8 +20,9 @@ class BasketController extends Controller
     public function basketPlace(Basket $basket)
     {
         $order = $basket->getOrder();
-        if($basket->countAvilable){
-            
+        if(!$basket->countAvilable){
+            session()->flash('warning', 'Товар не доступен');
+            return redirect()->route('basket');
         }
         return view('order', ['order' => $order]);
     }
@@ -31,13 +32,14 @@ class BasketController extends Controller
 
         $result = new Basket(true);
         $orderId = $result->getOrder();
+        $result->addProduct($product);
         if($result){
             session()->flash('success', 'Добавлен товар ' . $product->name);
         }else{
-            session()->flash('error', 'Товар не доступен ' . $product->name);
+            session()->flash('warning', 'Товар не доступен ' . $product->name);
 
         }
-        $result->addProduct($product);
+
         
         return redirect()->route('basket');
     }

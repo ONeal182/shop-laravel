@@ -20,6 +20,14 @@ class Order extends Model
     public function scopeActive($query){
         return $query->where('status', 1);
     }
+    public function calculateFullSum()
+    {
+        $sum = 0;
+        foreach ($this->skus()->withTrashed()->get() as $sku) {
+            $sum += $sku->getPriceForCount();
+        }
+        return $sum;
+    }
     public function getFullPrice()
     {
         $sum = 0;

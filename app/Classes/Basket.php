@@ -26,16 +26,29 @@ class Basket
 
     protected function getPivot($product)
     {
-        return  $this->order->products()->where('product_id', $product)->first()->pivot;;
+        return  $this->order->products()->where('product_id', $product)->first()->pivot;
     }
 
     public function getOrder()
     {
         return $this->order;
     }
-
+    public function countAvilable(){
+        foreach($this->order->products as $orderProduct){
+            if($this->getPivot($orderProduct)->count > $orderProduct->count){
+                return false;
+            }
+            
+        }
+        return true;
+    }
     public function saveOrder($name, $phone)
     {
+        if(!$this->countAvilable()){
+            session()->flash('warning', 'Упас, что то пошло не так!');
+
+            return false;
+        }
         return $this->order->saveOrder($name, $phone);
     }
 
@@ -60,25 +73,22 @@ class Basket
 
     public function addProduct(Product $product)
     {
-        $product->count;
         
-        if ($this->order->products->contains($product->id)) {
+        if($this->order->products->contains($product->id)) {
             $pivotRow = $this->getPivot($product->id);
             $pivotRow->count++;
-            if($pivotRow->count >= $product->count){
+            if ($pivotRow->count > $product->count) {
                 return false;
             }
             $pivotRow->update();
         } else {
-            if($product->count == 0){
+            if ($product->count == 0) {
                 return false;
             }
-            $this->order->products()->attach($this->order->id);
+            $this->order->products()->attach($product->id);
         }
-        if (Auth::check()) {
-            $this->order->user_id = Auth::id();
-            $this->order->save();
-        }
-        $product = Product::find($product->id);
+        // Order::changeFullSum($product->price);
+
+        return true;
     }
 }
