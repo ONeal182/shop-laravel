@@ -22,8 +22,9 @@ Auth::routes([
     'verify' => false
 
 ]);
+
 Route::get('locale/{locale}', 'MainController@changeLocale')->name('locale');
-Route::middleware(['set_locale'])->group(function () {
+// Route::middleware(['set_locale'])->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::group([
             'prefix' => 'person',
@@ -72,7 +73,7 @@ Route::middleware(['set_locale'])->group(function () {
     Route::post('/subscription/{product}', [MainController::class, 'subscribe'])->name('subscription');
     Route::get('/{category}', [MainController::class, 'category'])->name('category');
     Route::get('/{category}/{product?}',  [MainController::class, 'product'])->name('product');
-});
+// });
 
 
 

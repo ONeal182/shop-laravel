@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Transaltable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -9,10 +10,10 @@ class Product extends Model
 {
 
     use SoftDeletes;
-
+    use Transaltable;
     protected $table = 'products';
 
-    protected $fillable = ['name', 'code', 'price', 'category_id', 'description', 'image', 'hit', 'new', 'recomend', 'count'];
+    protected $fillable = ['name', 'code', 'price', 'category_id', 'description', 'image', 'hit', 'new', 'recomend', 'count', 'name_en','description_en'];
 
     public function category()
     {
