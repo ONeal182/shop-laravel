@@ -6,9 +6,10 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\ProductsFilterRequest;
 use App\Models\Subscription;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use App\Http\Requests\ProductsFilterRequest;
 
 class MainController extends Controller
 {
@@ -59,5 +60,13 @@ class MainController extends Controller
             ]
         );
         return redirect()->back()->with('success', 'Спасибо мы с вами свяжемся');
+    }
+
+    public function changeLocale($locale)
+    {
+        session(['locale'=> $locale]);
+        App::setLocale($locale);
+        $currentLocale = App::getLocale();
+        return redirect()->back();
     }
 }
